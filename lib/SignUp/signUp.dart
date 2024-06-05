@@ -1,6 +1,9 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously, unnecessary_null_comparison, library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctors_appointment/Api/api.dart';
 import 'package:doctors_appointment/home/homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -123,7 +126,7 @@ class _SignUpFormState extends State<StatefulWidget> {
                   prefixIcon: Icon(Icons.lock, color: Colors.white),
                   suffixIcon: GestureDetector(
                     child: Icon(
-                      state == false ? Icons.visibility : Icons.visibility_off,
+                      state == true ? Icons.visibility : Icons.visibility_off,
                       color: Colors.white,
                     ),
                     onTap: () => passwordState(),
@@ -170,7 +173,8 @@ class _SignUpFormState extends State<StatefulWidget> {
         prefs.setBool('loginState', true);
         prefs.setString('email', email);
         final userInfo = FirebaseFirestore.instance;
-        userInfo.collection('user').add(({'name' : name, 'email' : email}));
+        final userId = await Api.auth.currentUser!.uid;
+        userInfo.collection('user').doc(userId).set(({'name' : name, 'email' : email, 'id': userId}));
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Homescreen()));
       }

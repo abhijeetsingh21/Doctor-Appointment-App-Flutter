@@ -265,6 +265,7 @@ class _QuickConsultState extends State<QuickConsult> {
                                           arguments: QuickConsultParticularScreenArguments(
                                               name : availableDoctors[
                                                   doctorTypeClicked]?[idx][1],
+                                              id: availableDoctors[doctorTypeClicked]?[idx][4],
                                               type :availableDoctors[
                                                   doctorTypeClicked]?[idx][2],
                                               img : availableDoctors[
@@ -387,37 +388,40 @@ class _QuickConsultState extends State<QuickConsult> {
                   ],
                 ),
                 SizedBox(height: 10),
-                Expanded(
-                  // flex: 1,
+                Container(
+                  height: MediaQuery.of(context).size.height*0.3,
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: topDoctorsList.length,
                     itemBuilder: (context, idx) {
-                      return Container(
-                        padding: EdgeInsets.all(8),
-                        // height: 10,
-                        // width: 150,
-                        decoration: BoxDecoration(
-                            // color: Colors.black12,
-                            borderRadius: BorderRadius.circular(15.0),
-                            border: Border.all(color: Colors.black12)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              radius: 30,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.network(
-                                    fit: BoxFit.cover, topDoctorsList[idx][0]),
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          // height: 10,
+                          // width: 150,
+                          decoration: BoxDecoration(
+                              // color: Colors.black12,
+                              borderRadius: BorderRadius.circular(15.0),
+                              border: Border.all(color: Colors.black12)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.network(
+                                      fit: BoxFit.cover, topDoctorsList[idx][0]),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 7),
-                            Text(topDoctorsList[idx][1]),
-                            SizedBox(height: 7),
-                            Text(topDoctorsList[idx][2]),
-                          ],
+                              SizedBox(height: 7),
+                              Text(topDoctorsList[idx][1]),
+                              SizedBox(height: 7),
+                              Text(topDoctorsList[idx][2]),
+                            ],
+                          ),
                         ),
                       );
                     },

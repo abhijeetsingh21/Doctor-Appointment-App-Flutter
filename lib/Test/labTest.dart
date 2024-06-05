@@ -482,7 +482,7 @@ class NearbyLabs extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(8),
-      height: size.height * 0.19,
+      height: size.height * 0.2,
       width: size.width * 0.4,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

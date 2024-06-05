@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
-
+import 'dart:developer';
+import 'package:doctors_appointment/Api/api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctors_appointment/Models/userModel.dart';
 import 'package:doctors_appointment/login/login.dart';
@@ -28,6 +29,7 @@ class _HomescreenState extends State<Homescreen> {
   String userName = '';
   String email = '';
   String userImage = '';
+  int navIndex = 0;
 
   Future<String> emailGetter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,25 +51,41 @@ class _HomescreenState extends State<Homescreen> {
     print(userName);
     return userData;
   }
+    static List<String> screens = ['/quickConsult','/homeScreen','/LabTest'];
+  void changeScreen(int idx){
+    Navigator.pushNamed(context, screens[idx]);
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     emailGetter();
+    Api.getUserInfo();
+    // Api.uploadImage();
+    // Api.getImage();
     getUser(email);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    log(Api.imageUrl ?? '');
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: AnimatedBottomNavigationBar(
         backgroundColor: Color.fromARGB(255, 204, 226, 223),
         gapLocation: GapLocation.none,
-        activeIndex: 0,
-        icons: [Icons.home, Icons.person, Icons.phone],
-        onTap: (idx) {},
+        activeIndex: navIndex,
+        splashRadius: 50,
+        borderColor: Colors.black38,
+        blurEffect: true,
+        icons: [Icons.person, Icons.home, Icons.phone],
+        onTap: (idx) {
+          navIndex = idx;
+          changeScreen(idx);
+          log('$navIndex');
+
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.only(top: 35, left: 12, right: 12, bottom: 8),
@@ -107,7 +125,7 @@ class _HomescreenState extends State<Homescreen> {
                                         child: Image.network(
                                           fit: BoxFit.cover,
                                           height: double.infinity,
-                                          width:  double.infinity,
+                                          width: double.infinity,
                                           userImage,
                                         ),
                                       ),
@@ -192,8 +210,10 @@ class _HomescreenState extends State<Homescreen> {
                                     Color.fromARGB(255, 12, 33, 190),
                                     Colors.red)),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/quickConsult',
-                                  arguments: 'all');
+                              Navigator.pushNamed(
+                                context,
+                                '/quickConsult',
+                              );
                             },
                             child: Text(
                               'Quick Consult',
@@ -209,6 +229,8 @@ class _HomescreenState extends State<Homescreen> {
                         onTap: () => Navigator.pushNamed(
                             context, '/ParticularDoctor',
                             arguments: QuickConsultParticularScreenArguments(
+                              id : Api.auth.currentUser!.uid,
+                              
                                 img:
                                     'https://images.hindustantimes.com/rf/image_size_640x362/HT/p2/2016/07/01/Pictures/_04695dbe-3f6d-11e6-86cd-639e2418d1d4.jpg',
                                 name: 'Rawnak',
@@ -270,29 +292,33 @@ class _HomescreenState extends State<Homescreen> {
                         ),
                       ),
                       SizedBox(width: 12.0),
-                      Container(
-                        padding: EdgeInsets.all(8),
-                        height: 120,
-                        width: size.width * 0.28,
-                        decoration: BoxDecoration(
-                            // color: Colors.black12,
-                            borderRadius: BorderRadius.circular(15.0),
-                            border: Border.all(color: Colors.black12)),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 75,
-                              width: 75,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                    fit: BoxFit.cover,
-                                    'https://media.istockphoto.com/id/1300036753/photo/falling-antibiotics-healthcare-background.jpg?s=612x612&w=0&k=20&c=oquxJiLqE33ePw2qML9UtKJgyYUqjkLFwxT84Pr-WPk='),
+                      GestureDetector(
+                        onTap: () =>
+                            Navigator.pushNamed(context, '/OnlineMedicine'),
+                        child: Container(
+                          padding: EdgeInsets.all(8),
+                          height: 120,
+                          width: size.width * 0.28,
+                          decoration: BoxDecoration(
+                              // color: Colors.black12,
+                              borderRadius: BorderRadius.circular(15.0),
+                              border: Border.all(color: Colors.black12)),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 75,
+                                width: 75,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                      fit: BoxFit.cover,
+                                      'https://media.istockphoto.com/id/1300036753/photo/falling-antibiotics-healthcare-background.jpg?s=612x612&w=0&k=20&c=oquxJiLqE33ePw2qML9UtKJgyYUqjkLFwxT84Pr-WPk='),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 7),
-                            Text('Medicine'),
-                          ],
+                              SizedBox(height: 7),
+                              Text('Medicine'),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(width: 10.0),
@@ -358,35 +384,75 @@ class _HomescreenState extends State<Homescreen> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        Column(
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(1000),
-                                  border: Border.all(color: Colors.blue)),
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.network(
-                                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvsYpK4tvigZPthCgY28501f5QyOIKnBQs8rSgyt3dog&s')),
-                            ),
-                            SizedBox(height: 5.0),
-                            Text('ortho'),
-                          ],
+                        // Column(
+                        //   children: [
+                        //     Container(
+                        //       height: 50,
+                        //       width: 50,
+                        //       decoration: BoxDecoration(
+                        //           borderRadius: BorderRadius.circular(1000),
+                        //           border: Border.all(color: Colors.blue)),
+                        //       child: ClipRRect(
+                        //           borderRadius: BorderRadius.circular(100),
+                        //           child: Image.network(
+                        //               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvsYpK4tvigZPthCgY28501f5QyOIKnBQs8rSgyt3dog&s')),
+                        //     ),
+                        //     SizedBox(height: 5.0),
+                        //     Text('ortho'),
+                        //   ],
+                        // ),
+                        // SizedBox(width: 10.0),
+                        GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                                context, '/specialisityScreen',
+                                arguments: SpecialDoctorModel(type: 'ortho')),
+                            child: SpecialityIcon(
+                              iconImage:
+                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvsYpK4tvigZPthCgY28501f5QyOIKnBQs8rSgyt3dog&s',
+                              iconName: 'Ortho',
+                            )),
+                        SizedBox(width: 10.0),
+                        GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                                context, '/specialisityScreen',
+                                arguments: SpecialDoctorModel(type: 'neuro')),
+                            child: SpecialityIcon(
+                              iconImage:
+                                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVhdOXcjMSjxD29zT8lIHHnAV3uUBnwuvp_aNJaQ_qQA&s',
+                              iconName: 'Neuro',
+                            )),
+                        SizedBox(width: 10.0),
+                        GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                                context, '/specialisityScreen',
+                                arguments: SpecialDoctorModel(type: 'general')),
+                            child: SpecialityIcon(
+                              iconImage:
+                                  'https://cdn-icons-png.flaticon.com/512/8356/8356033.png',
+                              iconName: 'Cardio',
+                            )),
+                        SizedBox(width: 10.0),
+                        GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, '/specialisityScreen',
+                              arguments: SpecialDoctorModel(type: 'dentist')),
+                          child: SpecialityIcon(
+                            iconImage:
+                                'https://cdn-icons-png.flaticon.com/512/1453/1453589.png',
+                            iconName: 'Dentist',
+                          ),
                         ),
                         SizedBox(width: 10.0),
-                        SpecialityIcon(),
-                        SizedBox(width: 10.0),
-                        SpecialityIcon(),
-                        SizedBox(width: 10.0),
-                        SpecialityIcon(),
-                        SizedBox(width: 10.0),
-                        SpecialityIcon(),
-                        SizedBox(width: 10.0),
-                        SpecialityIcon(),
-                        SizedBox(width: 10.0),
-                        SpecialityIcon(),
+                        GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, '/specialisityScreen',
+                              arguments: SpecialDoctorModel(type: 'general')),
+                          child: SpecialityIcon(
+                            iconImage:
+                                'https://cdn-icons-png.flaticon.com/512/12106/12106213.png',
+                            iconName: 'GastroLogist',
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -396,91 +462,119 @@ class _HomescreenState extends State<Homescreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                        // color: Colors.blue,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.black38)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.grey,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                                'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg'),
-                          ),
-                        ),
-                        SizedBox(width: 10.0),
-                        Spacer(),
-                        Column(
-                          children: [
-                            Text(
-                              'Dr. Praveen ',
-                              style: TextStyle(color: Colors.blue[800]),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context, '/ParticularDoctor',
+                        arguments: QuickConsultParticularScreenArguments(
+                          id : Api.auth.currentUser!.uid,
+                            img:
+                                'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg',
+                            name: 'Dr. Praveen',
+                            type: 'Neurologist',
+                            workAt: 'AIIMS')),
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          // color: Colors.blue,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.black38)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg'),
                             ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Neurologist',
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(CupertinoIcons.heart),
                           ),
-                        )
-                      ],
+                          SizedBox(width: 10.0),
+                          Spacer(),
+                          Column(
+                            children: [
+                              Text(
+                                'Dr. Praveen ',
+                                style: TextStyle(color: Colors.blue[800]),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                'Neurologist',
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(CupertinoIcons.heart),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                        // color: Colors.blue,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.black38)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.grey,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                                'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg'),
-                          ),
-                        ),
-                        SizedBox(width: 10.0),
-                        Spacer(),
-                        Column(
-                          children: [
-                            Text(
-                              'Dr. Praveen ',
-                              style: TextStyle(color: Colors.blue[800]),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context, '/ParticularDoctor',
+                        arguments: QuickConsultParticularScreenArguments(
+                          id : Api.auth.currentUser!.uid,
+                            img:
+                                'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg',
+                            name: 'Raman',
+                            type: 'General',
+                            workAt: 'AIIMS')),
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          // color: Colors.blue,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.black38)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg'),
                             ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Neurologist',
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(CupertinoIcons.heart),
                           ),
-                        )
-                      ],
+                          SizedBox(width: 10.0),
+                          Spacer(),
+                          Column(
+                            children: [
+                              Text(
+                                'Dr. Raman ',
+                                style: TextStyle(color: Colors.blue[800]),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                'General',
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(CupertinoIcons.heart),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -494,7 +588,11 @@ class _HomescreenState extends State<Homescreen> {
 }
 
 class SpecialityIcon extends StatelessWidget {
-  const SpecialityIcon({
+  String iconName;
+  String iconImage;
+  SpecialityIcon({
+    required this.iconImage,
+    required this.iconName,
     super.key,
   });
 
@@ -506,16 +604,17 @@ class SpecialityIcon extends StatelessWidget {
           height: 50,
           width: 50,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(1000),
+            borderRadius: BorderRadius.circular(100),
             // border: Border.all(color: Colors.blue),
           ),
           child: ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: Image.network(
-                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVhdOXcjMSjxD29zT8lIHHnAV3uUBnwuvp_aNJaQ_qQA&s')),
+                iconImage,
+              )),
         ),
         SizedBox(height: 5.0),
-        Text('neuro'),
+        Text(iconName),
       ],
     );
   }

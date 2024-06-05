@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctors_appointment/Models/testModel.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +42,7 @@ class _MyTestScreenState extends State<MyTestScreen> {
     //   snapshot.docs[0]['price']
     // ]}');
 
-    print('this is testInfo List $testInfo');
+    log('this is testInfo List $testInfo');
   }
 
   @override
@@ -81,7 +83,7 @@ class _MyTestScreenState extends State<MyTestScreen> {
                           padding: const EdgeInsets.only(bottom: 14.0),
                           child: Container(
                             padding: EdgeInsets.all(8),
-                            height: size.height * 0.2,
+                            height: size.height * 0.22,
                             width: size.width * 0.8,
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.black26),
