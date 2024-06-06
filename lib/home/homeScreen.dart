@@ -4,7 +4,14 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:doctors_appointment/Api/api.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctors_appointment/Appointment/appointments.dart';
+import 'package:doctors_appointment/Cart/cart.dart';
 import 'package:doctors_appointment/Models/userModel.dart';
+import 'package:doctors_appointment/Online%20Medicines/onlineMedicines.dart';
+import 'package:doctors_appointment/Test/labTest.dart';
+import 'package:doctors_appointment/consult/quickConsult.dart';
+import 'package:doctors_appointment/consult/quickConsultParticular.dart';
+import 'package:doctors_appointment/example/example.dart';
 import 'package:doctors_appointment/login/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 
 class Homescreen extends StatefulWidget {
   Homescreen({super.key});
@@ -29,7 +37,7 @@ class _HomescreenState extends State<Homescreen> {
   String userName = '';
   String email = '';
   String userImage = '';
-  int navIndex = 0;
+
 
   Future<String> emailGetter() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,11 +56,12 @@ class _HomescreenState extends State<Homescreen> {
     final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).single;
     userName = userData.name;
     userImage = userData.img;
-    print(userName);
+    log(userName);
     return userData;
   }
-    static List<String> screens = ['/quickConsult','/homeScreen','/LabTest'];
-  void changeScreen(int idx){
+
+  static List<String> screens = ['/quickConsult', '/homeScreen', '/LabTest'];
+  void changeScreen(int idx) {
     Navigator.pushNamed(context, screens[idx]);
   }
 
@@ -69,26 +78,14 @@ class _HomescreenState extends State<Homescreen> {
 
   @override
   Widget build(BuildContext context) {
-    log(Api.imageUrl ?? '');
     Size size = MediaQuery.of(context).size;
+    log(Api.imageUrl ?? '');
     return Scaffold(
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        backgroundColor: Color.fromARGB(255, 204, 226, 223),
-        gapLocation: GapLocation.none,
-        activeIndex: navIndex,
-        splashRadius: 50,
-        borderColor: Colors.black38,
-        blurEffect: true,
-        icons: [Icons.person, Icons.home, Icons.phone],
-        onTap: (idx) {
-          navIndex = idx;
-          changeScreen(idx);
-          log('$navIndex');
-
-        },
-      ),
+      extendBody: true,
+      
       body: Padding(
-        padding: const EdgeInsets.only(top: 35, left: 12, right: 12, bottom: 8),
+        padding: EdgeInsets.only(
+            top: 35, left: 12, right: 12,),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Container(
@@ -107,7 +104,7 @@ class _HomescreenState extends State<Homescreen> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: userImage == ''
-                                    ? CircularProgressIndicator()
+                                    ? Icon(Icons.person)
                                     : GestureDetector(
                                         onTap: () async {
                                           SharedPreferences prefs =
@@ -229,8 +226,7 @@ class _HomescreenState extends State<Homescreen> {
                         onTap: () => Navigator.pushNamed(
                             context, '/ParticularDoctor',
                             arguments: QuickConsultParticularScreenArguments(
-                              id : Api.auth.currentUser!.uid,
-                              
+                                id: Api.auth.currentUser!.uid,
                                 img:
                                     'https://images.hindustantimes.com/rf/image_size_640x362/HT/p2/2016/07/01/Pictures/_04695dbe-3f6d-11e6-86cd-639e2418d1d4.jpg',
                                 name: 'Rawnak',
@@ -466,7 +462,7 @@ class _HomescreenState extends State<Homescreen> {
                     onTap: () => Navigator.pushNamed(
                         context, '/ParticularDoctor',
                         arguments: QuickConsultParticularScreenArguments(
-                          id : Api.auth.currentUser!.uid,
+                            id: Api.auth.currentUser!.uid,
                             img:
                                 'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg',
                             name: 'Dr. Praveen',
@@ -524,7 +520,7 @@ class _HomescreenState extends State<Homescreen> {
                     onTap: () => Navigator.pushNamed(
                         context, '/ParticularDoctor',
                         arguments: QuickConsultParticularScreenArguments(
-                          id : Api.auth.currentUser!.uid,
+                            id: Api.auth.currentUser!.uid,
                             img:
                                 'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg',
                             name: 'Raman',
@@ -577,6 +573,123 @@ class _HomescreenState extends State<Homescreen> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 10.0),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context, '/ParticularDoctor',
+                        arguments: QuickConsultParticularScreenArguments(
+                            id: Api.auth.currentUser!.uid,
+                            img:
+                                'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg',
+                            name: 'Raman',
+                            type: 'General',
+                            workAt: 'AIIMS')),
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          // color: Colors.blue,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.black38)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg'),
+                            ),
+                          ),
+                          SizedBox(width: 10.0),
+                          Spacer(),
+                          Column(
+                            children: [
+                              Text(
+                                'Dr. Raman ',
+                                style: TextStyle(color: Colors.blue[800]),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                'General',
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(CupertinoIcons.heart),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context, '/ParticularDoctor',
+                        arguments: QuickConsultParticularScreenArguments(
+                            id: Api.auth.currentUser!.uid,
+                            img:
+                                'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg',
+                            name: 'Raman',
+                            type: 'General',
+                            workAt: 'AIIMS')),
+                    child: Container(
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                          // color: Colors.blue,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.black38)),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: Image.network(
+                                  fit: BoxFit.cover,
+                                  height: double.infinity,
+                                  width: double.infinity,
+                                  'https://st2.depositphotos.com/2931363/6569/i/450/depositphotos_65699901-stock-photo-black-man-keeping-arms-crossed.jpg'),
+                            ),
+                          ),
+                          SizedBox(height: 10.0),
+                          Spacer(),
+                          Column(
+                            children: [
+                              Text(
+                                'Dr. Raman ',
+                                style: TextStyle(color: Colors.blue[800]),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                'General',
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(CupertinoIcons.heart),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  // SizedBox(height: size.height*0.12,)
                 ],
               ),
             ),

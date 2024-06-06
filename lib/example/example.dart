@@ -1,416 +1,204 @@
-// ignore_for_file: prefer_const_constructors
+import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:doctors_appointment/Api/api.dart';
-import 'package:doctors_appointment/Models/userModel.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class LimitedListView extends StatefulWidget {
+
+class ExamplePage extends StatelessWidget {
+  const ExamplePage({Key? key}) : super(key: key);
+
   @override
-  _LimitedListViewState createState() => _LimitedListViewState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Animated Notch Bottom Bar',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(),
+    );
+  }
 }
 
-class _LimitedListViewState extends State<LimitedListView> {
-  String? email;
-  int price = 1;
-  int item = 1;
-  String id = '';
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
-   addMoreItems(String particularId, int curPrice, int curCnt, int totalCost) {
-    print(particularId);
-    setState(() {
-      curCnt += 1;
-      totalCost += (curPrice);
-    });
-    print(particularId);
-    _firestore
-        .collection('user')
-        .doc(id)
-        .collection('cart')
-        .doc(particularId)
-        .update({'item': curCnt, 'totalCost': totalCost});
-  }
-
-  subItems(String particularId, int curPrice,int curCnt,int totalCost) {
-    setState(() {
-      curCnt -= 1;
-      totalCost -= curPrice;
-    });
-    print(particularId);
-    _firestore
-        .collection('user')
-        .doc(id)
-        .collection('cart')
-        .doc(particularId)
-        .update({'item': curCnt, 'totalCost': totalCost});
-  }
-
-  Future getCartDetails(String id) async {
-    await _firestore
-        .collection('user')
-        .doc(id)
-        .collection('cart')
-        .add({'price': price, 'item': item});
-    // print(id);
-  }
-
-  Future<SharedPreferences> getId = SharedPreferences.getInstance();
-  Future getUserEmail() async {
-    final SharedPreferences _getId = await getId;
-    setState(() {
-      email = _getId.getString('email') ?? '';
-    });
-  }
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
-  void initState() {
-    // TODO: implement initState
-    getUserEmail();
-    super.initState();
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  /// Controller to handle PageView and also handles initial page
+  final _pageController = PageController(initialPage: 0);
+
+  /// Controller to handle bottom nav bar and also handles initial page
+  final NotchBottomBarController _controller = NotchBottomBarController(index: 0);
+
+  int maxCount = 5;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    /// widget list
+    final List<Widget> bottomBarPages = [
+      Page1(
+        controller: (_controller),
+      ),
+      const Page2(),
+      const Page3(),
+      const Page4(),
+      const Page5(),
+    ];
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: Icon(Icons.arrow_back_ios_new_outlined)),
-                    SizedBox(width: 15.0),
-                    Text(
-                      'My Cart',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 14),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: StreamBuilder(
-                    stream: _firestore
-                        .collection('user')
-                        .where('email', isEqualTo: email)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      // var tmp = snapshot.data!;
-                      // print(tmp);
-                      id = snapshot.data!.docs[0].id;
-                      // print(id);
-                      if (snapshot.hasData) {
-                        // return Text('data');
-                        return FutureBuilder(
-                            future: _firestore
-                                .collection('user')
-                                .doc(id)
-                                .collection('cart')
-                                .get(),
-                            builder: (context, snapshot) {
-                              return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: snapshot.data!.docs.length,
-                                  itemBuilder: (context, idx) {
-                                    // print(snapshot.data!.docs.length);
-                                    final data = snapshot.data!.docs;
-                                    final itemId = snapshot.data!.docs[idx].id;
-                                    final itemPrice =
-                                        snapshot.data!.docs[idx]['price'];
-                                    final totalCost =
-                                        snapshot.data!.docs[idx]['totalCost'];
-                                    print(itemPrice);
-                                    final itemCnt =
-                                        snapshot.data!.docs[idx]['item'];
-                                    // print(snapshot.data!.docs[idx].id);
-                                    return Container(
-                                      padding: EdgeInsets.all(8),
-                                      // color: Colors.blueAccent,
-                                      decoration: BoxDecoration(
-                                          color: Colors.blue.shade50,
-                                          border:
-                                              Border.all(color: Colors.black38),
-                                          borderRadius:
-                                              BorderRadius.circular(14)),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: 70,
-                                            height: 80,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(15)),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              child: Image.network(
-                                                  fit: BoxFit.cover,
-                                                  height: double.infinity,
-                                                  width: double.infinity,
-                                                  'https://assets.ajio.com/medias/sys_master/root/20230710/MuI8/64ac2677a9b42d15c9491aee/-473Wx593H-4931736180-multi-MODEL.jpg'),
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            // mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Text('Jhons Baby Lotion'),
-                                              SizedBox(height: 5),
-                                              Text('200ml'),
-                                              SizedBox(height: 10),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    'rs $totalCost',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 50,
-                                                  ),
-                                                  Stack(
-                                                    children: [
-                                                      Container(
-                                                          height: 40,
-                                                          width: 120,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(19),
-                                                            color: Colors.white,
-                                                          ),
-                                                          child: Center(
-                                                              child: Text(
-                                                            '${data[idx]['item']}',
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 18),
-                                                          ))),
-                                                      Positioned(
-                                                          child: GestureDetector(
-                                                              onTap: () =>
-                                                                  subItems(
-                                                                      itemId,
-                                                                      itemPrice,
-                                                                      itemCnt,totalCost),
-                                                              child: CircleAvatar(
-                                                                backgroundColor:
-                                                                    Colors.blue,
-                                                                child: Icon(
-                                                                  CupertinoIcons
-                                                                      .minus,
-                                                                  size: 30,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              ))),
-                                                      Positioned(
-                                                          left: 80,
-                                                          child: GestureDetector(
-                                                              onTap: () =>
-                                                                  addMoreItems(
-                                                                      itemId,
-                                                                      itemPrice,
-                                                                      itemCnt,totalCost),
-                                                              child: CircleAvatar(
-                                                                backgroundColor:
-                                                                    Colors.blue,
-                                                                child: Icon(
-                                                                  CupertinoIcons
-                                                                      .add,
-                                                                  size: 30,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                              )))
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Spacer(),
-                                          CircleAvatar(
-                                              radius: 16,
-                                              child: Icon(
-                                                  Icons.delete_outline_outlined))
-                                        ],
-                                      ),
-                                    );
-                                  });
-                              // });
-                  
-                              // });
-                            });
-                      } else {
-                        return Text('nothing');
-                      }
-                      // if (snapshot.hasData) {
-                      //   return ListView.builder(
-                      //       shrinkWrap: true,
-                      //       itemCount: snapshot.data!.docs.length,
-                      //       itemBuilder: (context, idx) {
-                      //         // id = snapshot.data!.docs[idx].id;
-                      //         // print(snapshot.data!.docs.length);
-                      //         // print(id);
-                      //         return  FutureBuilder(
-                      //             future: _firestore
-                      //                 .collection('user')
-                      //                 .doc(id)
-                      //                 .collection('cart')
-                      //                 .get(),
-                      //             builder: (context, snapshot) {
-                  
-                      //               // print(snapshot.data!.docs[idx].id);
-                      //               final data = snapshot.data!.docs[idx];
-                      //               final String itemId = snapshot.data!.docs[idx].id;
-                      //               return
-                      // Container(
-                      //                 padding: EdgeInsets.all(8),
-                      //                 // color: Colors.blueAccent,
-                      //                 decoration: BoxDecoration(
-                      //                     color: Colors.blue.shade50,
-                      //                     border: Border.all(color: Colors.black38),
-                      //                     borderRadius: BorderRadius.circular(14)),
-                      //                 child: Row(
-                      //                   crossAxisAlignment:
-                      //                       CrossAxisAlignment.start,
-                      //                   children: [
-                      //                     Container(
-                      //                       width: 70,
-                      //                       height: 80,
-                      //                       decoration: BoxDecoration(
-                      //                           borderRadius:
-                      //                               BorderRadius.circular(15)),
-                      //                       child: ClipRRect(
-                      //                         borderRadius:
-                      //                             BorderRadius.circular(15),
-                      //                         child: Image.network(
-                      //                             fit: BoxFit.cover,
-                      //                             height: double.infinity,
-                      //                             width: double.infinity,
-                      //                             'https://assets.ajio.com/medias/sys_master/root/20230710/MuI8/64ac2677a9b42d15c9491aee/-473Wx593H-4931736180-multi-MODEL.jpg'),
-                      //                       ),
-                      //                     ),
-                      //                     SizedBox(width: 10),
-                      //                     Column(
-                      //                       crossAxisAlignment:
-                      //                           CrossAxisAlignment.start,
-                      //                       // mainAxisAlignment: MainAxisAlignment.start,
-                      //                       children: [
-                      //                         Text('Jhons Baby Lotion'),
-                      //                         SizedBox(height: 5),
-                      //                         Text('200ml'),
-                      //                         SizedBox(height: 10),
-                      //                         Row(
-                      //                           children: [
-                      //                             Text(
-                      //                               'rs ${data['price']}',
-                      //                               style: TextStyle(
-                      //                                   fontWeight: FontWeight.bold,
-                      //                                   fontSize: 14),
-                      //                             ),
-                      //                             SizedBox(
-                      //                               width: 50,
-                      //                             ),
-                      //                             Stack(
-                      //                               children: [
-                      //                                 Container(
-                      //                                     height: 40,
-                      //                                     width: 120,
-                      //                                     decoration: BoxDecoration(
-                      //                                       borderRadius:
-                      //                                           BorderRadius
-                      //                                               .circular(19),
-                      //                                       color: Colors.white,
-                      //                                     ),
-                      //                                     child: Center(
-                      //                                         child: Text(
-                      //                                       '${data['item']}',
-                      //                                       style: TextStyle(
-                      //                                           fontWeight:
-                      //                                               FontWeight.bold,
-                      //                                           fontSize: 18),
-                      //                                     ))),
-                      //                                 Positioned(
-                      //                                     child: GestureDetector(
-                      //                                         onTap: () =>
-                      //                                             subItems(itemId),
-                      //                                         child: CircleAvatar(
-                      //                                           backgroundColor:
-                      //                                               Colors.blue,
-                      //                                           child: Icon(
-                      //                                             CupertinoIcons
-                      //                                                 .minus,
-                      //                                             size: 30,
-                      //                                             color:
-                      //                                                 Colors.white,
-                      //                                           ),
-                      //                                         ))),
-                      //                                 Positioned(
-                      //                                     left: 80,
-                      //                                     child: GestureDetector(
-                      //                                         onTap: () =>
-                      //                                             addMoreItems(itemId),
-                      //                                         child: CircleAvatar(
-                      //                                           backgroundColor:
-                      //                                               Colors.blue,
-                      //                                           child: Icon(
-                      //                                             CupertinoIcons
-                      //                                                 .add,
-                      //                                             size: 30,
-                      //                                             color:
-                      //                                                 Colors.white,
-                      //                                           ),
-                      //                                         )))
-                      //                               ],
-                      //                             )
-                      //                           ],
-                      //                         ),
-                      //                       ],
-                      //                     ),
-                      //                     Spacer(),
-                      //                     CircleAvatar(
-                      //                         radius: 16,
-                      //                         child: Icon(
-                      //                             Icons.delete_outline_outlined))
-                      //                   ],
-                      //                 ),
-                      //               );
-                      //             });
-                      //       });
-                      // } else {
-                      //   return Text('nothing');
-                      // }
-                    },
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: List.generate(bottomBarPages.length, (index) => bottomBarPages[index]),
+      ),
+      extendBody: true,
+      bottomNavigationBar: (bottomBarPages.length <= maxCount)
+          ? AnimatedNotchBottomBar(
+              /// Provide NotchBottomBarController
+              notchBottomBarController: _controller,
+              color: Colors.white,
+              showLabel: true,
+              textOverflow: TextOverflow.visible,
+              maxLine: 1,
+              shadowElevation: 5,
+              kBottomRadius: 28.0,
+
+              // notchShader: const SweepGradient(
+              //   startAngle: 0,
+              //   endAngle: pi / 2,
+              //   colors: [Colors.red, Colors.green, Colors.orange],
+              //   tileMode: TileMode.mirror,
+              // ).createShader(Rect.fromCircle(center: Offset.zero, radius: 8.0)),
+              notchColor: Colors.black87,
+
+              /// restart app if you change removeMargins
+              removeMargins: false,
+              bottomBarWidth: 500,
+              showShadow: false,
+              durationInMilliSeconds: 300,
+
+              itemLabelStyle: const TextStyle(fontSize: 10),
+
+              elevation: 1,
+              bottomBarItems: const [
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.home_filled,
+                    color: Colors.blueGrey,
                   ),
-                )
+                  activeItem: Icon(
+                    Icons.home_filled,
+                    color: Colors.blueAccent,
+                  ),
+                  itemLabel: 'Page 1',
+                ),
+                BottomBarItem(
+                  inActiveItem: Icon(Icons.star, color: Colors.blueGrey),
+                  activeItem: Icon(
+                    Icons.star,
+                    color: Colors.blueAccent,
+                  ),
+                  itemLabel: 'Page 2',
+                ),
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.settings,
+                    color: Colors.blueGrey,
+                  ),
+                  activeItem: Icon(
+                    Icons.settings,
+                    color: Colors.pink,
+                  ),
+                  itemLabel: 'Page 3',
+                ),
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.person,
+                    color: Colors.blueGrey,
+                  ),
+                  activeItem: Icon(
+                    Icons.person,
+                    color: Colors.yellow,
+                  ),
+                  itemLabel: 'Page 4',
+                ),
               ],
-            ),
-          ),
+              onTap: (index) {
+                log('current selected index $index');
+                _pageController.jumpToPage(index);
+              },
+              kIconSize: 24.0,
+            )
+          : null,
+    );
+  }
+}
+
+/// add controller to check weather index through change or not. in page 1
+class Page1 extends StatelessWidget {
+  final NotchBottomBarController? controller;
+
+  const Page1({Key? key, this.controller}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.yellow,
+      child: Center(
+        /// adding GestureDetector
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            controller?.jumpTo(2);
+          },
+          child: const Text('Page 1'),
         ),
       ),
     );
+  }
+}
+
+class Page2 extends StatelessWidget {
+  const Page2({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(color: Colors.green, child: const Center(child: Text('Page 2')));
+  }
+}
+
+class Page3 extends StatelessWidget {
+  const Page3({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(color: Colors.red, child: const Center(child: Text('Page 3')));
+  }
+}
+
+class Page4 extends StatelessWidget {
+  const Page4({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(color: Colors.blue, child: const Center(child: Text('Page 4')));
+  }
+}
+
+class Page5 extends StatelessWidget {
+  const Page5({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(color: Colors.lightGreenAccent, child: const Center(child: Text('Page 5')));
   }
 }

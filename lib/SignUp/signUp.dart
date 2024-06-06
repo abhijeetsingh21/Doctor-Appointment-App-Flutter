@@ -174,7 +174,7 @@ class _SignUpFormState extends State<StatefulWidget> {
         prefs.setString('email', email);
         final userInfo = FirebaseFirestore.instance;
         final userId = await Api.auth.currentUser!.uid;
-        userInfo.collection('user').doc(userId).set(({'name' : name, 'email' : email, 'id': userId}));
+        userInfo.collection('user').doc(userId).set(({'name' : name, 'email' : email, 'id': userId,'img' : ''}));
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Homescreen()));
       }

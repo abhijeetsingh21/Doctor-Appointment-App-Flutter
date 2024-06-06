@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:doctors_appointment/Appointment/appointments.dart';
+import 'package:doctors_appointment/BottomNavBar/bottomNav.dart';
 import 'package:doctors_appointment/Cart/cart.dart';
 import 'package:doctors_appointment/Online%20Medicines/onlineMedicines.dart';
 import 'package:doctors_appointment/SignUp/signUp.dart';
@@ -63,8 +64,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Splashscreen(loginState: loginState),
-      // home : ScheduleAppointment(),
+      // home: Splashscreen(loginState: loginState),
+      home : BottomNav(),
       // home: Onlinemedicines(),
       // home : (loginState == true) ? Homescreen() : LoginPage(),
       routes: {
