@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:doctors_appointment/BottomNavBar/bottomNav.dart';
 import 'package:doctors_appointment/home/homeScreen.dart';
 import 'package:doctors_appointment/login/login.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _SplashscreenState extends State<Splashscreen> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  (widget.loginState == true) ? Homescreen() : LoginPage(),
+                  (widget.loginState == true) ? const BottomNav() : LoginPage(),
             )));
     return Image.asset(
       'assets/images/splashImage1.jpg',

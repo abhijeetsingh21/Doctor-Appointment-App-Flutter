@@ -64,9 +64,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: Splashscreen(loginState: loginState),
-      home : BottomNav(),
-      // home: Onlinemedicines(),
+      home: Splashscreen(loginState: loginState),
+      // home : MyCartScreen(),
+      // home: CallApi(),
       // home : (loginState == true) ? Homescreen() : LoginPage(),
       routes: {
         '/homeScreen': (context) => Homescreen(),
@@ -82,6 +82,7 @@ class _MyAppState extends State<MyApp> {
         '/CartScreen': (context) => MyCartScreen(),
         '/TopCategories': (context) => Topcategories(),
         '/specialisityScreen': (context) => Specialistscreen(),
+        '/cartScreen' : (context) => MyCartScreen(),
       },
     );
   }

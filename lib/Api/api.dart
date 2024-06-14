@@ -7,19 +7,21 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Api {
+  // static Set get  listItems => Set();
   static FirebaseAuth get auth => FirebaseAuth.instance;
 
   static User get user => auth.currentUser!;
 
-  static FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   static Future<String> getUserInfo() async {
     // log(user.phoneNumber.toString());
     // log('${user.hashCode}');
     // log(user.email.toString());
-    final tmp = await _firestore.collection('user').doc(user.uid).get();
+    final tmp = await firestore.collection('user').doc(user.uid).get();
     log(tmp[0]);
     return user.uid.toString();
 
@@ -54,7 +56,7 @@ class Api {
     return doctors;
   }
 
-  static String?  imageUrl ;
+  static String? imageUrl;
   static String putStringText =
       'This upload has been generated using the putString method! Check the metadata too!';
 
@@ -68,7 +70,7 @@ class Api {
     uploadTask;
   }
 
-  static Future getImage() async {
+  static Future getImage(String setPath) async {
     final image = await ImagePicker().pickImage(
       source: ImageSource.gallery,
       maxHeight: 1500,
@@ -80,33 +82,38 @@ class Api {
       log(ref.getData().toString());
 
       final uploadTask = firebaseStorageRef.putFile(File(image.path));
-    final snapshot = await uploadTask.whenComplete(()=> {null});
-    imageUrl = await snapshot.ref.getDownloadURL();
-    await _firestore.collection('path').doc(auth.currentUser!.uid).set({'image' : imageUrl} );
-    //   uploadTask.then((res) {
-    //     // log('${res.ref.getDownloadURL()}');
-    // imageUrl =  res.ref.getDownloadURL().toString();
-    // // _firestore
-    // //         .collection('imagePath')
-    // //         .doc(auth.currentUser!.uid).collection('path').add({'imgUrl': res.ref.getDownloadURL()});
-    //         // .set({'imgUrl': res.ref.getDownloadURL()});
-    //   });
+      final snapshot = await uploadTask.whenComplete(() => {null});
+      imageUrl = await snapshot.ref.getDownloadURL();
+      await firestore
+          .collection('user/$setPath')
+          .add({'PrescriptionImage': imageUrl});
+      log(imageUrl.toString());
     } else {
       //error uploading
     }
   }
+
+  static Future uploadUserImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final image = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 1500,
+      maxWidth: 1500,
+    );
+    if (image != null) {
+      Reference firebaseStorageRef = FirebaseStorage.instance.ref().child(
+          "user/${auth.currentUser!.uid}/userImage"); //i is the name of the image
+      log(ref.getData().toString());
+
+      final uploadTask = firebaseStorageRef.putFile(File(image.path));
+      final snapshot = await uploadTask.whenComplete(() => {null});
+      imageUrl = await snapshot.ref.getDownloadURL();
+      prefs.setString('userImage', imageUrl!);
+      await firestore
+          .collection('user')
+          .doc(auth.currentUser!.uid)
+          .update({'img': imageUrl});
+      log(imageUrl.toString());
+    }
+  }
 }
-  
-
-
-    //  return ref.putString('data');
-    //  var task =  ref.putString(
-    //     putStringText,
-    //     metadata: SettableMetadata(
-    //       contentLanguage: 'en',
-    //       customMetadata: <String, String>{'example': 'putString'},
-    //     ),
-    //   );
-    //   log(task.toString());
-    //    return task;
-  

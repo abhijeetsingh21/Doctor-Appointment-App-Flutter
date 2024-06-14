@@ -40,17 +40,17 @@ class _BottomNavState extends State<BottomNav> {
               shadowElevation: 5,
               kBottomRadius: 28.0,
 
-              // notchShader: const SweepGradient(
-              //   startAngle: 0,
-              //   endAngle: pi / 2,
-              //   colors: [Colors.red, Colors.green, Colors.orange],
-              //   tileMode: TileMode.mirror,
-              // ).createShader(Rect.fromCircle(center: Offset.zero, radius: 8.0)),
+              notchShader: const SweepGradient(
+                startAngle: 0,
+                endAngle: 3.14 / 2,
+                colors: [Colors.red, Colors.green, Colors.orange],
+                tileMode: TileMode.mirror,
+              ).createShader(Rect.fromCircle(center: Offset.zero, radius: 8.0)),
               notchColor: Colors.black87,
 
               /// restart app if you change removeMargins
               removeMargins: false,
-              bottomBarWidth: 500,
+              // bottomBarWidth: 500,
               showShadow: false,
               durationInMilliSeconds: 300,
 
@@ -108,9 +108,7 @@ class _BottomNavState extends State<BottomNav> {
               },
               kIconSize: 24.0,
             ),
-      body: SafeArea(
-        child: bottomBarPages[index],
-      ),
+      body: bottomBarPages[index],
     );
   }
 }

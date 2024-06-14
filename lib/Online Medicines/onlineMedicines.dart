@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:doctors_appointment/Api/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Onlinemedicines extends StatefulWidget {
   const Onlinemedicines({super.key});
@@ -11,13 +16,9 @@ class Onlinemedicines extends StatefulWidget {
 }
 
 class _OnlinemedicinesState extends State<Onlinemedicines> {
-  List popularMedicines = [
-    ['Calpol 500', '15pcs', 20.00],
-    ['Dolo 650', '15pcs', 35.00],
-    ['ORSL Drink', '200ml',42.00],
-  ];
-  TextStyle _style = TextStyle(color: Colors.white);
-  TextEditingController _controller = TextEditingController();
+  final ImagePicker imagePicker = ImagePicker();
+  TextStyle style = TextStyle(color: Colors.white);
+  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +44,10 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                       ),
                     ),
                     Spacer(),
-                    Icon(CupertinoIcons.bag)
+                    IconButton(
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/cartScreen'),
+                        icon: Icon(CupertinoIcons.cart))
                   ],
                 ),
                 SizedBox(height: 20),
@@ -55,7 +59,7 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                         color: Colors.black45,
                         size: 35,
                       ),
-                      controller: _controller,
+                      controller: controller,
                     );
                   },
                   suggestionsBuilder: (context, ter) {
@@ -86,8 +90,14 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                         Spacer(),
                         ElevatedButton(
                           onPressed: () {},
-                          child: Text('Upload',
-                              style: TextStyle(color: Colors.white)),
+                          child: TextButton(
+                            child: Text(
+                              'Upload',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onPressed: () =>
+                                Api.getImage(Api.auth.currentUser!.uid),
+                          ),
                           style: ElevatedButton.styleFrom(
                               fixedSize: Size.fromHeight(2),
                               backgroundColor: Colors.blue),
@@ -127,9 +137,11 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                       Column(
                         children: [
                           GestureDetector(
-                            onTap: ()=> Navigator.pushNamed(context,'/TopCategories'),
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/TopCategories'),
                             child: Container(
-                                height: MediaQuery.of(context).size.height * 0.1,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
                                 width: MediaQuery.of(context).size.width * 0.2,
                                 // decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(0)),
                                 child: Center(
@@ -155,8 +167,11 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                               child: Center(
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
-                                    child:
-                                        Image.asset('assets/images/skin2.png')),
+                                    child: Image.asset(
+                                      height: double.infinity,
+                                      width: double.infinity,
+                                      'assets/images/skin2.png',
+                                    )),
                               )),
                           SizedBox(height: 5),
                           Text('Skin Care')
@@ -256,95 +271,134 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                 Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.29,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: popularMedicines.length,
-                    itemBuilder: (context, idx) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          padding: EdgeInsets.all(8),
-                          // color: Colors.red,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black26),
-                              borderRadius: BorderRadius.circular(10)),
-                          // height: 200,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                                    // color:  Colors.black,
-                                    height: 70,
-                                    width: 70,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                          fit: BoxFit.cover,
-                                          height: double.infinity,
-                                          width: double.infinity,
-                                          'https://t4.ftcdn.net/jpg/02/81/42/77/360_F_281427785_gfahY8bX4VYCGo6jlfO8St38wS9cJQop.jpg'),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 15),
-                              Row(
-                                children: [
-                                  Text(
-                                    popularMedicines[idx][0],
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                  Spacer(),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(3),
-                                      color: Colors.black12,
-                                    ),
-                                    child: Row(
+                  child: StreamBuilder(
+                    stream: Api.firestore
+                        .collection('products')
+                        .doc('AYnbaoqc0XAFuy4N8E77')
+                        .collection('medicines')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      Set listItems = {};
+                      if (snapshot.data != null) {
+                        var data = snapshot.data!.docs;
+                        log(data[0]['name']);
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, idx) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                padding: EdgeInsets.all(8),
+                                // color: Colors.red,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black26),
+                                    borderRadius: BorderRadius.circular(10)),
+                                // height: 200,
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          Icons.star,
-                                          size: 14,
-                                          color: Colors.yellow[600],
-                                        ),
-                                        SizedBox(width: 2),
-                                        Text(
-                                          '4.9',
-                                          style: TextStyle(fontSize: 12),
+                                        Container(
+                                          // decoration: BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                                          // color:  Colors.black,
+                                          height: 70,
+                                          width: 70,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(
+                                                fit: BoxFit.cover,
+                                                height: double.infinity,
+                                                width: double.infinity,
+                                                'https://t4.ftcdn.net/jpg/02/81/42/77/360_F_281427785_gfahY8bX4VYCGo6jlfO8St38wS9cJQop.jpg'),
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  )
-                                ],
+                                    SizedBox(height: 15),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          data[idx]['name'],
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Spacer(),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(3),
+                                            color: Colors.black12,
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.star,
+                                                size: 14,
+                                                color: Colors.yellow[600],
+                                              ),
+                                              SizedBox(width: 2),
+                                              Text(
+                                                '4.9',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(data[idx]['qnty'],
+                                        style:
+                                            TextStyle(color: Colors.black38)),
+                                    SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        Text('₹'),
+                                        SizedBox(width: 5),
+                                        Text(data[idx]['price'].toString()),
+                                        Spacer(),
+                                        IconButton(
+                                          onPressed: () async {
+                                            
+                                            if (listItems
+                                                    .contains(data[idx].id) ==
+                                                false) {
+                                              await Api.firestore
+                                                  .collection(
+                                                      'user/${Api.auth.currentUser!.uid}/cart')
+                                                  .add({
+                                                'item': 1,
+                                                'price': '${data[idx]['price']}',
+                                                'id': data[idx]['id']
+                                              });
+                                              listItems.add(data[idx].id);
+                                            } 
+                                            log('$listItems');
+                                          },
+                                          icon: Icon(
+                                            Icons.add_box_rounded,
+                                            size: 40,
+                                          ),
+                                          color: Colors.blue,
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(height: 5),
-                              Text(popularMedicines[idx][1],
-                                  style: TextStyle(color: Colors.black38)),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Text('₹'),
-                                  SizedBox(width: 5),
-                                  Text(popularMedicines[idx][2].toString()),
-                                  Spacer(),
-                                  Icon(
-                                    Icons.add_box_rounded,
-                                    size: 40,
-                                    color: Colors.blue,
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
+                            );
+                          },
+                        );
+                      } else {
+                        return Text('no medicines');
+                      }
                     },
                   ),
                 ),
