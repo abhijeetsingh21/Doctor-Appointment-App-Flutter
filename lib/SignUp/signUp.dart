@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctors_appointment/Api/api.dart';
+import 'package:doctors_appointment/BottomNavBar/bottomNav.dart';
 import 'package:doctors_appointment/home/homeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -176,7 +177,7 @@ class _SignUpFormState extends State<StatefulWidget> {
         final userId = await Api.auth.currentUser!.uid;
         userInfo.collection('user').doc(userId).set(({'name' : name, 'email' : email, 'id': userId,'img' : ''}));
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Homescreen()));
+            context, MaterialPageRoute(builder: (context) => BottomNav()));
       }
     }
     catch (error) {

@@ -4,6 +4,7 @@ import 'package:doctors_appointment/Appointment/appointments.dart';
 import 'package:doctors_appointment/BottomNavBar/bottomNav.dart';
 import 'package:doctors_appointment/Cart/cart.dart';
 import 'package:doctors_appointment/Online%20Medicines/onlineMedicines.dart';
+import 'package:doctors_appointment/ProfilePage/profilePage.dart';
 import 'package:doctors_appointment/SignUp/signUp.dart';
 import 'package:doctors_appointment/Specialist%20Page/specialistScreen.dart';
 import 'package:doctors_appointment/Test/labTest.dart';
@@ -65,7 +66,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Splashscreen(loginState: loginState),
-      // home : MyCartScreen(),
+      // home : Profilepage(),
       // home: CallApi(),
       // home : (loginState == true) ? Homescreen() : LoginPage(),
       routes: {
@@ -83,6 +84,8 @@ class _MyAppState extends State<MyApp> {
         '/TopCategories': (context) => Topcategories(),
         '/specialisityScreen': (context) => Specialistscreen(),
         '/cartScreen' : (context) => MyCartScreen(),
+        '/ProfilePage' : (context) => Profilepage(),
+        '/BottomNav' : (context) => BottomAppBar(),
       },
     );
   }

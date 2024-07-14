@@ -47,7 +47,7 @@ class _HomescreenState extends State<Homescreen> {
     return email;
   }
 
-  Future<UserModel> getUser(String email) async {
+ Future<UserModel> getUser(String email) async {
     final snapshot = await _firebaseFirestore
         .collection('user')
         .where('email', isEqualTo: email)
@@ -97,44 +97,18 @@ class _HomescreenState extends State<Homescreen> {
                         builder: (context, snapshot) {
                           return Row(
                             children: [
-                              GestureDetector(
-                                onTap: () => showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text('Change profile/LogOut'),
-                                        content: Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () => Api.uploadUserImage(),
-                                              child: Text('Change')),
-                                            Spacer(),
-                                            GestureDetector(
-                                              onTap: ()async{
-                                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                prefs.setBool('loginState',false);
-                                                FirebaseAuth.instance.signOut();
-                                                Navigator.pushNamed(context, '/login');
-
-                                              },
-                                              child: Text('Log-Out')),
-                                          ],
+                              CircleAvatar(
+                                radius: 25,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: userImage == ''
+                                      ? Icon(Icons.person)
+                                      : Image.network(
+                                          fit: BoxFit.cover,
+                                          height: double.infinity,
+                                          width: double.infinity,
+                                          userImage,
                                         ),
-                                      );
-                                    }),
-                                child: CircleAvatar(
-                                  radius: 25,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: userImage == ''
-                                        ? Icon(Icons.person)
-                                        : Image.network(
-                                            fit: BoxFit.cover,
-                                            height: double.infinity,
-                                            width: double.infinity,
-                                            userImage,
-                                          ),
-                                  ),
                                 ),
                               ),
                               SizedBox(width: 17),

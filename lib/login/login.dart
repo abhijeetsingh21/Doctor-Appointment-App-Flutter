@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously,, unnecessary_null_comparison
 // unnecessary_null_comparison
 
+import 'package:doctors_appointment/BottomNavBar/bottomNav.dart';
 import 'package:doctors_appointment/SignUp/signUp.dart';
 import 'package:doctors_appointment/home/homeScreen.dart';
 // import 'package:firebase_core/firebase_core.dart';
@@ -37,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
         prefs.setBool('loginState', true);
         prefs.setString('email', emailController.text);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Homescreen()));
+            context, MaterialPageRoute(builder: (context) => BottomNav()));
       }
     } catch (error) {
       return showDialog<void>(

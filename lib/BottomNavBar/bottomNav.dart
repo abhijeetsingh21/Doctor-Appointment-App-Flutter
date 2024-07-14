@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:doctors_appointment/Online%20Medicines/onlineMedicines.dart';
+import 'package:doctors_appointment/ProfilePage/profilePage.dart';
 import 'package:doctors_appointment/Test/labTest.dart';
 import 'package:doctors_appointment/consult/quickConsult.dart';
 import 'package:doctors_appointment/home/homeScreen.dart';
@@ -23,7 +24,7 @@ class _BottomNavState extends State<BottomNav> {
     Homescreen(),
     LabTest(),
     QuickConsult(),
-    Onlinemedicines()
+    Profilepage()
   ];
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,7 @@ class _BottomNavState extends State<BottomNav> {
                     Icons.home_filled,
                     color: Colors.blueAccent,
                   ),
-                  itemLabel: 'Page 1',
+                  itemLabel: 'Home',
                 ),
                 BottomBarItem(
                   inActiveItem: Icon(Icons.star, color: Colors.blueGrey),
@@ -97,7 +98,7 @@ class _BottomNavState extends State<BottomNav> {
                     Icons.person,
                     color: Colors.yellow,
                   ),
-                  itemLabel: 'Page 4',
+                  itemLabel: 'Profile',
                 ),
               ],
               onTap: (idx) {
