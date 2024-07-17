@@ -48,6 +48,7 @@ class _TopcategoriesState extends State<Topcategories> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments;
     print(popularProducts);
     return Scaffold(
       body: SafeArea(
@@ -55,8 +56,8 @@ class _TopcategoriesState extends State<Topcategories> {
           padding: const EdgeInsets.all(15.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(  
+              crossAxisAlignment: CrossAxisAlignment.start, 
               children: [
                 Row(
                   children: [
@@ -65,7 +66,7 @@ class _TopcategoriesState extends State<Topcategories> {
                         child: Icon(Icons.arrow_back_ios_new_outlined)),
                     SizedBox(width: 15.0),
                     Text(
-                      'Baby Care',
+                      args.toString(),
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -146,7 +147,7 @@ class _TopcategoriesState extends State<Topcategories> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Baby Care Products',
+                          '$args Products',
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 19),
                         ),

@@ -113,8 +113,9 @@ class _MyTestScreenState extends State<MyTestScreen> {
                                       Row(
                                         children: [
                                           Container(
-                                            height: size.height * 0.04,
-                                            width: size.width * 0.22,
+                                            padding: EdgeInsets.symmetric(horizontal: 9,vertical: 4.5),
+                                            // height: size.height * 0.04,
+                                            // width: size.width * 0.22,
                                             decoration: BoxDecoration(
                                               border: Border.all(
                                                   color: Colors.blue),
@@ -133,7 +134,7 @@ class _MyTestScreenState extends State<MyTestScreen> {
                                             ),
                                           ),
                                           SizedBox(width: size.width*0.03),
-                                          GestureDetector(
+                                          GestureDetector(  
                                             onTap: ()=> Navigator.pushNamed(context, '/scheduleAppointment'),
                                             child: Container(
                                               height: size.height * 0.04,

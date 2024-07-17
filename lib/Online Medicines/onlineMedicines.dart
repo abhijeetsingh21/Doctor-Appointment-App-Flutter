@@ -137,8 +137,9 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                       Column(
                         children: [
                           GestureDetector(
-                            onTap: () =>
-                                Navigator.pushNamed(context, '/TopCategories'),
+                            onTap: () => Navigator.pushNamed(
+                                context, '/TopCategories',
+                                arguments: 'Baby Care'),
                             child: Container(
                                 height:
                                     MediaQuery.of(context).size.height * 0.1,
@@ -161,33 +162,45 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                       ),
                       Column(
                         children: [
-                          Container(
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              child: Center(
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image.asset(
-                                      height: double.infinity,
-                                      width: double.infinity,
-                                      'assets/images/skin2.png',
-                                    )),
-                              )),
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                                context, '/TopCategories',
+                                arguments: 'Skin Care'),
+                            child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: Center(
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.asset(
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        'assets/images/skin2.png',
+                                      )),
+                                )),
+                          ),
                           SizedBox(height: 5),
                           Text('Skin Care')
                         ],
                       ),
                       Column(
                         children: [
-                          Container(
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              width: MediaQuery.of(context).size.width * 0.2,
-                              child: Center(
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child:
-                                        Image.asset('assets/images/eye1.png')),
-                              )),
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                                context, '/TopCategories',
+                                arguments: 'Eye Care'),
+                            child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                width: MediaQuery.of(context).size.width * 0.2,
+                                child: Center(
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.asset(
+                                          'assets/images/eye1.png')),
+                                )),
+                          ),
                           SizedBox(height: 5),
                           Text('Eye Care')
                         ],
@@ -201,46 +214,61 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                   children: [
                     Column(
                       children: [
-                        Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Center(
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child:
-                                      Image.asset('assets/images/petcare.png')),
-                            )),
+                        GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, '/TopCategories',
+                              arguments: 'Pet Care'),
+                          child: Container(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Center(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.asset(
+                                        'assets/images/petcare.png')),
+                              )),
+                        ),
                         SizedBox(height: 5),
                         Text('Pet Care')
                       ],
                     ),
                     Column(
                       children: [
-                        Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Center(
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.asset(
-                                      'assets/images/covidcare.png')),
-                            )),
+                        GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, '/TopCategories',
+                              arguments: 'Covid Care'),
+                          child: Container(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Center(
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: Image.asset(
+                                        'assets/images/covidcare.png')),
+                              )),
+                        ),
                         SizedBox(height: 5),
                         Text('Covid Care')
                       ],
                     ),
                     Column(
                       children: [
-                        Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Center(
-                              child: ClipRRect(
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: Image.asset(
-                                          'assets/images/medicaldevices1.png'))),
-                            )),
+                        GestureDetector(
+                          onTap: () => Navigator.pushNamed(
+                              context, '/TopCategories',
+                              arguments: 'Medical Devices'),
+                          child: Container(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              child: Center(
+                                child: ClipRRect(
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: Image.asset(
+                                            'assets/images/medicaldevices1.png'))),
+                              )),
+                        ),
                         SizedBox(height: 5),
                         Text('Medical Devices')
                       ],
@@ -366,7 +394,6 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                                         Spacer(),
                                         IconButton(
                                           onPressed: () async {
-                                            
                                             if (listItems
                                                     .contains(data[idx].id) ==
                                                 false) {
@@ -375,11 +402,12 @@ class _OnlinemedicinesState extends State<Onlinemedicines> {
                                                       'user/${Api.auth.currentUser!.uid}/cart')
                                                   .add({
                                                 'item': 1,
-                                                'price': '${data[idx]['price']}',
+                                                'price':
+                                                    '${data[idx]['price']}',
                                                 'id': data[idx]['id']
                                               });
                                               listItems.add(data[idx].id);
-                                            } 
+                                            }
                                             log('$listItems');
                                           },
                                           icon: Icon(
