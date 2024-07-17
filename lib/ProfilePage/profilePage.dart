@@ -1,10 +1,7 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doctors_appointment/Api/api.dart';
-import 'package:doctors_appointment/Models/userModel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +22,7 @@ class _ProfilepageState extends State<Profilepage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading : false,
+        automaticallyImplyLeading: false,
         title: Text(
           'My Profile',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -59,7 +56,7 @@ class _ProfilepageState extends State<Profilepage> {
                                         child: AlertDialog(
                                           backgroundColor: Colors.transparent,
                                           content: Container(
-                                            height: size.height * 0.3,
+                                            height: size.height * 0.33,
                                             width: size.width * 0.7,
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -72,7 +69,7 @@ class _ProfilepageState extends State<Profilepage> {
                                                 height: double.infinity,
                                                 width: double.infinity,
                                                 fit: BoxFit.cover,
-                                                snapshot.data!['img'],
+                                                snapshot.data!['img'] ,
                                               ),
                                             ),
                                           ),
@@ -157,7 +154,8 @@ class _ProfilepageState extends State<Profilepage> {
                                                   context: context,
                                                   builder: (context) {
                                                     return AlertDialog(
-                                                      backgroundColor: Colors.transparent,
+                                                      backgroundColor:
+                                                          Colors.transparent,
                                                       // title:
                                                       // Text('Change name'),
                                                       content: SizedBox(
@@ -289,8 +287,8 @@ class _ProfilepageState extends State<Profilepage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(15),
-                  height: size.height * 0.4,
-                  width: size.width * 1,
+                  // height: size.height * 0.4,
+                  // width: size.width * 1,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.black12,
@@ -396,8 +394,6 @@ class _ProfilepageState extends State<Profilepage> {
                 ),
                 Container(
                   padding: EdgeInsets.all(15),
-                  height: size.height * 0.21,
-                  width: size.width * 1,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: Colors.black12,
@@ -425,9 +421,7 @@ class _ProfilepageState extends State<Profilepage> {
                         ),
                         fieldName: 'Text Message',
                       ),
-                      // SizedBox(
-                      //   height: 15,
-                      // ),
+
                       SettingFields(
                         icon: Icon(
                           CupertinoIcons.phone,

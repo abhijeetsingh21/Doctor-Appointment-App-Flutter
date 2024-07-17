@@ -107,6 +107,7 @@ class Api {
 
       final uploadTask = firebaseStorageRef.putFile(File(image.path));
       final snapshot = await uploadTask.whenComplete(() => {null});
+      log(uploadTask.toString());
       imageUrl = await snapshot.ref.getDownloadURL();
       prefs.setString('userImage', imageUrl!);
       await firestore
@@ -116,4 +117,4 @@ class Api {
       log(imageUrl.toString());
     }
   }
-}
+} 

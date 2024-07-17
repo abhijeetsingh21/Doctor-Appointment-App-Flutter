@@ -8,6 +8,7 @@ import 'package:doctors_appointment/ProfilePage/profilePage.dart';
 import 'package:doctors_appointment/Test/labTest.dart';
 import 'package:doctors_appointment/consult/quickConsult.dart';
 import 'package:doctors_appointment/home/homeScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -19,7 +20,8 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   int index = 0;
-  final NotchBottomBarController _controller = NotchBottomBarController(index: 0);
+  final NotchBottomBarController _controller =
+      NotchBottomBarController(index: 0);
   final List<Widget> bottomBarPages = [
     Homescreen(),
     LabTest(),
@@ -31,84 +33,85 @@ class _BottomNavState extends State<BottomNav> {
     return Scaffold(
       extendBody: true,
       bottomNavigationBar: AnimatedNotchBottomBar(
-              /// Provide NotchBottomBarController
-              blurOpacity: double.infinity,
-              notchBottomBarController: _controller,
-              color: Colors.greenAccent,
-              showLabel: true,
-              textOverflow: TextOverflow.visible,
-              maxLine: 1,
-              shadowElevation: 5,
-              kBottomRadius: 28.0,
+        /// Provide NotchBottomBarController
+        blurOpacity: double.infinity,
+        notchBottomBarController: _controller,
+        color: Colors.greenAccent,
+        showLabel: true,
+        textOverflow: TextOverflow.visible,
+        maxLine: 1,
+        shadowElevation: 5,
+        kBottomRadius: 28.0,
 
-              notchShader: const SweepGradient(
-                startAngle: 0,
-                endAngle: 3.14 / 2,
-                colors: [Colors.red, Colors.green, Colors.orange],
-                tileMode: TileMode.mirror,
-              ).createShader(Rect.fromCircle(center: Offset.zero, radius: 8.0)),
-              notchColor: Colors.black87,
+        notchShader: const SweepGradient(
+          startAngle: 0,
+          endAngle: 3.14 / 2,
+          colors: [Colors.red, Colors.green, Colors.orange],
+          tileMode: TileMode.mirror,
+        ).createShader(Rect.fromCircle(center: Offset.zero, radius: 8.0)),
+        notchColor: Colors.black87,
 
-              /// restart app if you change removeMargins
-              removeMargins: false,
-              // bottomBarWidth: 500,
-              showShadow: false,
-              durationInMilliSeconds: 300,
+        /// restart app if you change removeMargins
+        removeMargins: false,
+        // bottomBarWidth: 500,
+        showShadow: false,
+        durationInMilliSeconds: 300,
 
-              itemLabelStyle: const TextStyle(fontSize: 10),
+        itemLabelStyle: const TextStyle(fontSize: 10),
 
-              elevation: 1,
-              bottomBarItems: const [
-                BottomBarItem(
-                  inActiveItem: Icon(
-                    Icons.home_filled,
-                    color: Colors.blueGrey,
-                  ),
-                  activeItem: Icon(
-                    Icons.home_filled,
-                    color: Colors.blueAccent,
-                  ),
-                  itemLabel: 'Home',
-                ),
-                BottomBarItem(
-                  inActiveItem: Icon(Icons.star, color: Colors.blueGrey),
-                  activeItem: Icon(
-                    Icons.star,
-                    color: Colors.blueAccent,
-                  ),
-                  itemLabel: 'Page 2',
-                ),
-                BottomBarItem(
-                  inActiveItem: Icon(
-                    Icons.settings,
-                    color: Colors.blueGrey,
-                  ),
-                  activeItem: Icon(
-                    Icons.settings,
-                    color: Colors.pink,
-                  ),
-                  itemLabel: 'Page 3',
-                ),
-                BottomBarItem(
-                  inActiveItem: Icon(
-                    Icons.person,
-                    color: Colors.blueGrey,
-                  ),
-                  activeItem: Icon(
-                    Icons.person,
-                    color: Colors.yellow,
-                  ),
-                  itemLabel: 'Profile',
-                ),
-              ],
-              onTap: (idx) {
-                log('current selected index $idx');
-                setState(() {
-                  index = idx;
-                });
-              },
-              kIconSize: 24.0,
+        elevation: 1,
+        bottomBarItems: const [
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.home_filled,
+              color: Colors.blueGrey,
             ),
+            activeItem: Icon(
+              Icons.home_filled,
+              color: Colors.blueAccent,
+            ),
+            itemLabel: 'Home',
+          ),
+          BottomBarItem(
+            inActiveItem:
+                Icon(CupertinoIcons.lab_flask, color: Colors.blueGrey),
+            activeItem: Icon(
+              CupertinoIcons.lab_flask,
+              color: Colors.blueAccent,
+            ),
+            itemLabel: 'Lab Test',
+          ),
+          BottomBarItem(
+            inActiveItem: Icon(
+              CupertinoIcons.captions_bubble,
+              color: Colors.blueGrey,
+            ),
+            activeItem: Icon(
+              CupertinoIcons.captions_bubble,
+              color: Colors.pink,
+            ),
+            itemLabel: 'Consult',
+          ),
+          BottomBarItem(
+            inActiveItem: Icon(
+              Icons.person,
+              color: Colors.blueGrey,
+            ),
+            activeItem: Icon(
+              Icons.person,
+              color: Colors.yellow,
+            ),
+            itemLabel: 'Profile',
+          ),
+        ],
+        onTap: (idx) {
+          log('current selected index $idx');
+          setState(() {
+            index = idx;
+          });
+        },
+        kIconSize: 24.0,
+      ),
       body: bottomBarPages[index],
     );
   }
