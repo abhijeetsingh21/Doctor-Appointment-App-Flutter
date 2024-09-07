@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
         final SharedPreferences prefs = await Prefs;
         prefs.setBool('loginState', true);
         prefs.setString('email', emailController.text);
-        Navigator.push(
+        Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => BottomNav()));
       }
     } catch (error) {
