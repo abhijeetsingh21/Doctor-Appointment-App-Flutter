@@ -1,6 +1,9 @@
 part of 'profile_cubit.dart';
 
 class ProfileState extends Equatable {
+  bool notificationToggle;
+  bool txtMessageToggle;
+  bool customerCallsToggle;
   ProfileState({
     required this.customerCallsToggle,
     required this.notificationToggle,
@@ -25,9 +28,6 @@ class ProfileState extends Equatable {
     );
   }
 
-  bool notificationToggle;
-  bool txtMessageToggle;
-  bool customerCallsToggle;
   @override
   List<Object?> get props => [
         notificationToggle,

@@ -8,16 +8,16 @@ part 'profile_state.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileState.init());
 
-  void onNotificationTap() {
-    emit(state.copyWith(notificationToggle: !state.notificationToggle));
+  void onNotificationTap(val) {
+    emit(state.copyWith(notificationToggle: val));
     log(state.notificationToggle.toString());
   }
-   void onTextMessageTap() {
-    emit(state.copyWith(txtMessageToggle: !state.txtMessageToggle));
+   void onTextMessageTap(val) {
+    emit(state.copyWith(txtMessageToggle: val));
     log(state.txtMessageToggle.toString());
   }
-   void onCustomerCallsTap() {
-    emit(state.copyWith(customerCallsToggle: !state.customerCallsToggle));
+   void onCustomerCallsTap(val) {
+    emit(state.copyWith(customerCallsToggle: val));
     log(state.customerCallsToggle.toString());
   }
 }
